@@ -15,20 +15,25 @@ def read_csv_header(filename):
         return header    
 
 
-def read_csv(filename):
+def read_csv(filename, sampling_rate=100):
     with open(filename) as csv_file:
         print('Reading {} ...'.format(filename))
         reader = csv.reader(csv_file)
         header = next(reader)
-        data = [row for row in reader]
+        data = [row for row in reader]        
         print('#{} rows read'.format(len(data)))
-    return data
+        N = len(data)
+        sample_size = N*sampling_rate//100
+        indices = np.random.randint(0,N, sample_size)   
+        sampled_data = [data[i] for i in indices]  
+    return sampled_data
 
 
-def read_data(dataroot):
+def read_data(dataroot, sampling_rate=10, seed=0):
+    np.random.seed(seed)    
     filenames = get_filenames(dataroot)
     data = []
     for filename in filenames:
-        data_part = read_csv(os_join(dataroot,filename))        
+        data_part = read_csv(os_join(dataroot,filename),sampling_rate)
         data+=data_part
     return data

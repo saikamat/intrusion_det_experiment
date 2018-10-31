@@ -24,6 +24,7 @@ np.random.seed(1202)
 
 def convert2npy(data):
     arr = np.array(data)
+    
     X = arr[:,:-1].astype(np.float32)
     Y_str = arr[:,-1]
     rows_without_nan = ~np.isnan(X).any(axis=1)
@@ -38,13 +39,6 @@ def convert2npy(data):
     return (X,Y)
 
 
-def sample_data(data,sampling_rate):
-    data = np.random.permutation(data)
-    N = len(data)
-    idx = np.random.randint(N, size=N//sampling_rate)
-    data = data[idx]
-    return data
-
 def split_data(data): # train,val,test -> 80%,5%,15%
     data = np.random.permutation(data)
     N = len(data)
@@ -54,9 +48,8 @@ def split_data(data): # train,val,test -> 80%,5%,15%
     return (train_data, val_data, test_data)
 
 
-data = read_data(dataroot)
+data = read_data(dataroot,sampling_rate=10)
 print('data is read!')
-data = sample_data(data,10)
 print('data is sampled!')
 
 print('There are #{} rows'.format(len(data)))
